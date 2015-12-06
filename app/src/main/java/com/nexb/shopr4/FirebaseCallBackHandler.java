@@ -83,7 +83,7 @@ public class FirebaseCallBackHandler implements IDataBaseController {
         firebaseActiveUserRef.addValueEventListener(firebaseUserValueEventListener);
     }
 
-    @Override
+    @Deprecated
     public String createNewShopList() {
         Firebase newListRef = firebaseShopListRef.push();
         ShopList newList = new ShopList();
@@ -95,21 +95,21 @@ public class FirebaseCallBackHandler implements IDataBaseController {
         return newListRef.getKey();
     }
 
-    @Override
+    @Deprecated
     public void setActiveList(String shopListID) {
         activeUser.setActiveList(shopListID);
         firebaseActiveUserRef.setValue(activeUser);
 
     }
 
-    @Override
+    @Deprecated
     public void setActiveShopListName(String shopListName) {
         activeShopList.setName(shopListName);
         firebaseActiveShopListRef.setValue(activeShopList);
 
     }
 
-    @Override
+    @Deprecated
     public void deleteList(String shopListID) {
             for(String listID : activeUser.getOwnLists()){
                 if (listID == shopListID) activeUser.getOwnLists().remove(listID);
@@ -118,7 +118,7 @@ public class FirebaseCallBackHandler implements IDataBaseController {
     }
 
 
-    @Override
+    @Deprecated
     public void addCategory(String name) {
         Category cat = new Category();
         cat.setName(name);
@@ -126,25 +126,25 @@ public class FirebaseCallBackHandler implements IDataBaseController {
         updateActiveList();
     }
 
-    @Override
+    @Deprecated
     public void updateCategoryName(int catID, String newName) {
         activeShopList.getCategories().get(catID).setName(newName);
         updateActiveList();
     }
 
-    @Override
+    @Deprecated
     public void deleteCategory(int catID) {
         activeShopList.getCategories().remove(catID);
         updateActiveList();
     }
 
-    @Override
+    @Deprecated
     public void insertCategory(int catID, Category category) {
         activeShopList.getCategories().add(catID, category);
         updateActiveList();
     }
 
-    @Override
+    @Deprecated
     public void addItemToActiveList(String categoryName, ListItem listItem) {
         for (Category c : activeShopList.getCategories()) {
             if (c.getName().equalsIgnoreCase(categoryName)) {
@@ -160,13 +160,13 @@ public class FirebaseCallBackHandler implements IDataBaseController {
         updateActiveList();
     }
 
-    @Override
+    @Deprecated
     public void deleteItem(int catID, int itemID) {
         activeShopList.getCategories().get(catID).getItems().remove(itemID);
 
     }
 
-    @Override
+    @Deprecated
     public void setActiveSuperMarket(String SuperMarketID) {
         if (firebaseActiveSupermarketRef != null) firebaseActiveSupermarketRef.removeEventListener(firebaseSupermarketValueEventListener);
         firebaseActiveSupermarketRef = firebaseRoot.child(mainActivity.getString(R.string.supermarketDir)).child(SuperMarketID);
@@ -228,12 +228,16 @@ public class FirebaseCallBackHandler implements IDataBaseController {
         public void onDataChange(DataSnapshot dataSnapshot) {
             activeUser = dataSnapshot.getValue(User.class);
             if (activeUser == null){
+                System.out.println("FirebaseHandler - created new Userinstance");
                 activeUser = new User();
                 initializeStandardCategories(activeUser);
                 initializeStandardDictionary(activeUser);
                 initializeStandardUnits(activeUser);
                 activeUser.setUserID(resolveUserId());
-                firebaseActiveUserRef.setValue(activeUser); //Will trigger secondary callback!
+                if (activeUser.getActiveList()=="TestList"){
+                    FireBaseController.getI().createNewShopList();
+                }
+                //Will trigger secondary callback!
             }
             //Check users activeList:
             if (!activeShopListID.equals(activeUser.getActiveList())) {

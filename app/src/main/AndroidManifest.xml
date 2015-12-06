@@ -17,7 +17,8 @@
             android:name="com.nexb.shopr4.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            > <!-- - -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
