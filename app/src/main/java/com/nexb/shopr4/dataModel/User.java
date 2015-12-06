@@ -17,7 +17,7 @@ public class User {
 
     private ArrayList<String> ownListNames = new ArrayList<>();
     private ArrayList<ForeignUserlist> foreignLists = new ArrayList<>();
-    private String activeList = "TestList";
+    private String activeList = "";
     private ArrayList<DictionaryItem> userDictionary = new ArrayList<>();
     private ArrayList<String> userUnits = new ArrayList<>();
     private ArrayList<String> userCategories = new ArrayList<>();
