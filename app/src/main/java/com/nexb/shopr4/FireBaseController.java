@@ -368,6 +368,7 @@ public class FireBaseController {
     // }
 
     public void shareShopListWithUserID(String userID, final String shopListID){
+        if (userID == user.getUserID()) return;
         System.out.println("UserID = " + userID + "Tried to set foreignList on user:" + userID + ", shopListID: " + shopListID);
         if (userID == null) return;
         userID = userID.replace(".",":");
@@ -382,7 +383,7 @@ public class FireBaseController {
                 }
                 ArrayList<String> foreignShoplistsIDs = new ArrayList<>();
                 foreignShoplistsIDs.add(shopListID);
-                foreignUser.getForeignLists().add(new ForeignUserlist(user.getUserName(), foreignShoplistsIDs, activeShopList.getName()));
+                foreignUser.getForeignLists().add(new ForeignUserlist(user.getUserID(), foreignShoplistsIDs, activeShopList.getName()));
 
                 foreignUserRef.setValue(foreignUser);
                 System.out.println(foreignUser.getForeignLists().size());
