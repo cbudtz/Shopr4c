@@ -256,6 +256,15 @@ public class FireBaseController {
                 firebaseUserRef.setValue(user);
             }
         }
+        for (int i=0;i<user.getForeignLists().size();i++){
+            if (user.getForeignLists().get(i).getShopListIDs().get(0).equals(activeShopList.getId())){
+                user.getForeignLists().remove(i);
+                if(user.getOwnLists().size()>0){
+                    user.setActiveList((user.getOwnLists().get(0)));
+                }
+                firebaseUserRef.setValue(user);
+            }
+        }
 
     }
 
