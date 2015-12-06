@@ -13,20 +13,20 @@ public interface IDataBaseController {
 
     void setContext(Activity mainActivity, String dataBaseUrl);
     //CUD operations
-    String createNewShopList();
-    void setActiveList(String ShopListID);
-    void setActiveShopListName(String shopListName);
-    void deleteList(String shopListID);
-
-    void addCategory(String name);
-    void updateCategoryName(int catID, String newName);
-    void deleteCategory(int catID);
-    void insertCategory(int catID, Category category);
-
-    void addItemToActiveList(String categoryName, ListItem listItem);
-    void deleteItem(int catID, int itemID);
-
-    void setActiveSuperMarket(String SuperMarketID);
+//    String createNewShopList();
+//    void setActiveList(String ShopListID);
+//    void setActiveShopListName(String shopListName);
+//    void deleteList(String shopListID);
+//
+//    void addCategory(String name);
+//    void updateCategoryName(int catID, String newName);
+//    void deleteCategory(int catID);
+//    void insertCategory(int catID, Category category);
+//
+//    void addItemToActiveList(String categoryName, ListItem listItem);
+//    void deleteItem(int catID, int itemID);
+//
+//    void setActiveSuperMarket(String SuperMarketID);
 
     //ShopListListening
     void addUserDataListener(IUserDataListener userDataListener);

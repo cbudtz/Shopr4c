@@ -238,9 +238,8 @@ public class FireBaseController {
         newShopList.addCategory(new Category("No Category"));
         newListRef.setValue(newShopList);
         user.addOwnList(newShopList.getId(), newShopList.getName());
-        if (user.getActiveList()==null) user.setActiveList(newShopList.getId());
+        user.setActiveList(newShopList.getId());
         firebaseUserRef.setValue(user);
-        //setActiveList(newListRef.getKey());
         return newListRef.getKey();
 
     }
@@ -453,13 +452,13 @@ public class FireBaseController {
             try {
                 userFromFirebase = dataSnapshot.getValue(User.class);
             } catch (Exception e ) {
-                firebaseUserRef.setValue(user);
+//                firebaseUserRef.setValue(user);
                 userFromFirebase = user;
             }
-
+            if (userFromFirebase == null) return;
             if (userFromFirebase == null || userFromFirebase.getUserName() == null) {
                 //Create new user
-                firebaseUserRef.setValue(user);
+//                firebaseUserRef.setValue(user);
                 System.out.println("User created");
             } else {
                 //Found user in db
@@ -541,6 +540,7 @@ public class FireBaseController {
     private class ShopListValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            System.out.println("Firebasecontroller - datasnapShot : " + dataSnapshot);
             ShopList newShopList = dataSnapshot.getValue(ShopList.class);
             activeShopList = newShopList;
             System.out.println("ShopList Changed:" + ((activeShopList != null) ? newShopList.getId() + newShopList.getName() : "null"));
