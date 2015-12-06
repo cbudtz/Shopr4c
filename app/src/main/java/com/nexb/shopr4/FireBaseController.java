@@ -65,7 +65,7 @@ public class FireBaseController {
     private ArrayAdapter<DictionaryItem> dictionaryAdapter;
     private ArrayList<TextView> shopListTitleViews = new ArrayList<>();
 
-        public void addTitleListener(TextView t){shopListTitleViews.add(t);}
+    public void addTitleListener(TextView t){shopListTitleViews.add(t);}
 
 
 
@@ -247,12 +247,11 @@ public class FireBaseController {
 
     public void deleteActiveList(){
         String deleteID = user.getActiveList();
-        for (String listId : user.getOwnLists()) {
-            if (listId.equals(deleteID)) {
-                user.getOwnLists().remove(listId);
-                user.setActiveList(user.getOwnLists().get(0));
-                if (user.getActiveList() == null) {
-                    createNewShopList();
+        for (int i=0;i<user.getOwnLists().size();i++) {
+            if (user.getOwnLists().get(i).equals(activeShopList.getId())) {
+                user.getOwnLists().remove(i);
+                user.getOwnListNames().remove(i);
+                if (user.getOwnLists().size()>0) {
                     user.setActiveList(user.getOwnLists().get(0));
                 }
                 firebaseUserRef.setValue(user);
@@ -295,7 +294,7 @@ public class FireBaseController {
 
     public void deleteCategory(int catId){
         if (catId>0)
-        activeShopList.getCategories().remove(catId);
+            activeShopList.getCategories().remove(catId);
         updateActiveList();
     }
 
@@ -369,7 +368,7 @@ public class FireBaseController {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User foreignUser = dataSnapshot.getValue(User.class);
-                System.out.println(foreignUser.getForeignLists().size());
+
                 if (foreignUser== null) {
                     foreignUser = new User();
                 }
@@ -433,7 +432,7 @@ public class FireBaseController {
         return activeShopList.getName();
     }
     public  void setActiveShopListName(String name){
-       //Find active listID
+        //Find active listID
         for (int i = 0; i <user.getOwnLists().size(); i++) {
             if (activeShopList.getId().equals(user.getOwnLists().get(i))){
                 user.getOwnListNames().set(i, name);
@@ -476,8 +475,6 @@ public class FireBaseController {
             activity.userName = user.getUserName();
             if (activity.findViewById(R.id.userMail)!=null) ((TextView)activity.findViewById(R.id.userMail)).setText(user.getUserID().replace(":","."));
             if (activity.findViewById(R.id.userName)!=null) ((TextView)activity.findViewById(R.id.userName)).setText(user.getUserName());
-            navDrawer.getMenu().removeGroup(1);
-            navDrawer.getMenu().removeGroup(2);
 
             int i = 0;
 //            for (String s : user.getOwnListNames()) {
@@ -533,7 +530,6 @@ public class FireBaseController {
                 dictionaryAdapter.notifyDataSetChanged();
             }
 
-            if (standardized) firebaseUserRef.setValue(user);
         }
 
         @Override
