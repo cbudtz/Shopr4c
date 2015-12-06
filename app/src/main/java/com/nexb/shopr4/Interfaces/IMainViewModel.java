@@ -1,4 +1,4 @@
-package com.nexb.shopr4;
+package com.nexb.shopr4.Interfaces;
 
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -19,9 +19,9 @@ public interface IMainViewModel extends IShopListListener, ISuperMarketListener,
 
     void addTitleTextView(TextView t);
 
-    void autoBoxClicked();
-    void autoBoxTextEntered(ListItem listItem);
-    void autoBoxItemSelected(DictionaryItem dictionaryItem);
+    //    void autoBoxClicked();
+//    void autoBoxTextEntered(ListItem listItem);
+//    void autoBoxItemSelected(DictionaryItem dictionaryItem);
     ArrayList<ShopListViewContent> getShopListViewContents();
 
     void insertItemFrom(ListItem tempItem, String newCatName, int oldCatId, int itemId);
@@ -35,4 +35,18 @@ public interface IMainViewModel extends IShopListListener, ISuperMarketListener,
     void deleteCategory(int catId);
 
     void setActiveShopListName(String listName);
+
+    String getActiveShopListName();
+
+    void shareShopListWithUserID(String email, String activeShopListID);
+
+    void addCategory(String catName);
+
+    void deleteActiveList();
+
+    void addItemToActiveList(String category, ListItem listItem);
+
+    void addItemToActiveListNoCategory(ListItem newItem);
+
+    String getActiveShopListID();
 }

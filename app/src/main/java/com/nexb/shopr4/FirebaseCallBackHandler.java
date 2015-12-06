@@ -13,6 +13,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.nexb.shopr4.Interfaces.IDataBaseController;
+import com.nexb.shopr4.Interfaces.IShopListListener;
+import com.nexb.shopr4.Interfaces.ISuperMarketListener;
+import com.nexb.shopr4.Interfaces.IUserDataListener;
 import com.nexb.shopr4.dataModel.Category;
 import com.nexb.shopr4.dataModel.Dictionary;
 import com.nexb.shopr4.dataModel.ListItem;
@@ -27,7 +31,7 @@ import java.util.ArrayList;
  * @author Christian on 04-12-2015.
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class FirebaseHandler implements IDataBaseController{
+public class FirebaseCallBackHandler implements IDataBaseController {
     //Data objects
     private User activeUser = new User();
     private String activeShopListID = "";
@@ -55,7 +59,7 @@ public class FirebaseHandler implements IDataBaseController{
     private ArrayList<ISuperMarketListener> superMarketListeners = new ArrayList<>();
 
 
-    public FirebaseHandler(Activity mainActivity, String dataBaseUrl){
+    public FirebaseCallBackHandler(Activity mainActivity, String dataBaseUrl){
         this.setContext(mainActivity, dataBaseUrl);
 
         //DEBUG

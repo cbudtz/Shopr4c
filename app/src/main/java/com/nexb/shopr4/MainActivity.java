@@ -24,6 +24,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nexb.shopr4.Interfaces.IDataBaseController;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.dataModel.DictionaryItem;
 import com.nexb.shopr4.dataModel.ListItem;
 import com.nexb.shopr4.fragments.BuyListFragment;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         EditListFragment.OnFragmentInteractionListener, BuyListFragment.OnFragmentInteractionListener, ShareListFragment.OnFragmentInteractionListener{
     public static final boolean DEBUG = true;
+//    private LocationManager locationManager;
+
     public enum fragmentState {EDIT,BUY,SHARE};
     private fragmentState fragmentType;
     private EditListFragment editFragment;
@@ -97,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.inflateHeaderView(R.layout.list_nav_header_view);
 
 
-
-        IDataBaseController firebaseHandler = new FirebaseHandler(this, getString(R.string.fireBaseUrl));
+        //setup callback handler and ViewModel
+        IDataBaseController firebaseHandler = new FirebaseCallBackHandler(this, getString(R.string.fireBaseUrl));
         mainViewModel = new MainViewModel(this, firebaseHandler);
         firebaseHandler.addActiveShopListListener(mainViewModel);
         firebaseHandler.addActiveSuperMarketListener(mainViewModel);
@@ -117,6 +121,9 @@ public class MainActivity extends AppCompatActivity
         //Show editlistfragment
         fragmentManager.beginTransaction().replace(R.id.mainContainer, editFragment).commit();
         fragmentType = fragmentState.EDIT;
+
+        //Future use
+//        locationManager = new LocationManager(this);
     }
 
     private void setUpActionBox() {
@@ -137,7 +144,8 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (fragmentType == fragmentState.EDIT) {
                     DictionaryItem newItem = (DictionaryItem) parent.getItemAtPosition(position);
-                    fireBaseController.addItemToActiveList(newItem.getCategory(), new ListItem(newItem.getAmount(), newItem.getUnit(), newItem.getName()));
+                    mainViewModel.addItemToActiveList(newItem.getCategory(), new ListItem(newItem.getAmount(), newItem.getUnit(), newItem.getName()));
+                    //fireBaseController.addItemToActiveList(newItem.getCategory(), new ListItem(newItem.getAmount(), newItem.getUnit(), newItem.getName()));
                     autoBox.setText("");
                     makeToast(R.string.toastItemAdded);
                     hideKeyboard();
@@ -149,7 +157,8 @@ public class MainActivity extends AppCompatActivity
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (fragmentType == fragmentState.EDIT) {
                     ListItem newItem = new ListItem(1, "stk", v.getText().toString());
-                    fireBaseController.addItemToActiveListNoCategory(newItem);
+                    mainViewModel.addItemToActiveListNoCategory(newItem);
+                    //fireBaseController.addItemToActiveListNoCategory(newItem);
                     System.out.println(v.getText());
                     makeToast(R.string.toastItemAdded);
                     hideKeyboard();
@@ -161,6 +170,7 @@ public class MainActivity extends AppCompatActivity
         autoBox.setDropDownBackgroundDrawable(getResources().getDrawable(android.R.drawable.alert_light_frame));
         ArrayAdapter<DictionaryItem> autoAdaptor = new ArrayAdapter<DictionaryItem>(this, android.R.layout.simple_dropdown_item_1line, FireBaseController.getI().getDictionaryStrings());
         autoBox.setAdapter(autoAdaptor);
+        //mainViewModel.setDictionaryAdapter(autoAdaptor);
         FireBaseController.getI().setDictionaryAdapter(autoAdaptor);
 
     }
@@ -190,14 +200,14 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.toolbarAddCategory) {
             if(fragmentType == fragmentState.EDIT){
-                FireBaseController.getI().addCategory("Indtast navn");
+                mainViewModel.addCategory(getString(R.string.newCategory));
                 makeToast(R.string.toastCatAdded);
             }
             return true;
         }
         if(id == R.id.toolbarDeleteList){
             if(fragmentType == fragmentState.EDIT){
-                FireBaseController.getI().deleteActiveList();
+                mainViewModel.deleteActiveList();
             }
             return true;
         }
@@ -259,10 +269,13 @@ public class MainActivity extends AppCompatActivity
                     fragmentManager.beginTransaction().replace(R.id.mainContainer, buyFragment).commit();
                     fragmentType = fragmentState.BUY;
                     fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_preferences));
+                    hideKeyboard();
                 }else{
                     fragmentManager.beginTransaction().replace(R.id.mainContainer, editFragment).commit();
                     fragmentType = fragmentState.EDIT;
-                    fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_lock_idle_lock));
+                    //fab.setImageDrawable(getResources().getDrawable(R.mipmap.ic_kurv));
+                   // fab.setBackgroundDrawable(getResources().getDrawable(R.mipmap.ic_kurv));
+                    hideKeyboard();
                 }
             }
             @Override

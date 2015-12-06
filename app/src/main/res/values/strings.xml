@@ -42,6 +42,7 @@
     <string name="toastCatAdded">Kategori tilføjet.</string>
     <string name="toastNewListAdded">Ny liste oprettet.</string>
     <string name="toastListShared">Listen er nu delt.</string>
+    <string name="newCategory">Ny kategori</string>
     <!-- End Danish Strings. -->
 
 </resources>

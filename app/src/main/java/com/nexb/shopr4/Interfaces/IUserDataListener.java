@@ -1,4 +1,4 @@
-package com.nexb.shopr4;
+package com.nexb.shopr4.Interfaces;
 
 import com.nexb.shopr4.dataModel.User;
 

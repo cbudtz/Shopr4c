@@ -1,6 +1,5 @@
 package com.nexb.shopr4;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
 import android.view.LayoutInflater;
@@ -8,6 +7,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.nexb.shopr4.Interfaces.IDataBaseController;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.View.ShopListViewCategory;
 import com.nexb.shopr4.View.ShopListViewContent;
 import com.nexb.shopr4.View.ShopListViewItem;
@@ -71,6 +72,41 @@ public class MainViewModel implements IMainViewModel {
         FireBaseController.getI().setActiveShopListName(listName);
     }
 
+    @Override
+    public String getActiveShopListName() {
+        return FireBaseController.getI().getActiveShopListName();
+    }
+
+    @Override
+    public void shareShopListWithUserID(String email, String activeShopListID) {
+        FireBaseController.getI().shareShopListWithUserID(email, activeShopListID);
+    }
+
+    @Override
+    public void addCategory(String catName) {
+        FireBaseController.getI().addCategory(catName);
+    }
+
+    @Override
+    public void deleteActiveList() {
+        FireBaseController.getI().deleteActiveList();
+    }
+
+    @Override
+    public void addItemToActiveList(String category, ListItem listItem) {
+        FireBaseController.getI().addItemToActiveList(category, new ListItem(listItem.getAmount(), listItem.getUnit(), listItem.getName()));
+    }
+
+    @Override
+    public void addItemToActiveListNoCategory(ListItem newItem) {
+        FireBaseController.getI().addItemToActiveListNoCategory(newItem);
+    }
+
+    @Override
+    public String getActiveShopListID() {
+        return FireBaseController.getI().getActiveShopListID();
+    }
+
 
     //Adaptors to be notified on dataChange
     private ArrayAdapter<ShopListViewContent> shoplistAdaptor;
@@ -96,21 +132,21 @@ public class MainViewModel implements IMainViewModel {
     }
     //---------------------------------- Input
     //AutoBoxClicks----------------
-    @Override
-    public void autoBoxClicked() {
-        //TODO Some manipulation of autobox? Drop down?
-    }
-
-    @Override
-    public void autoBoxTextEntered(ListItem listItem) {
-        //TODO different behavior in Shop fragment
-        dataBaseController.addItemToActiveList("Ingen kategori",listItem);
-    }
-
-    @Override
-    public void autoBoxItemSelected(DictionaryItem dictionaryItem) {
-        dataBaseController.addItemToActiveList(dictionaryItem.getCategory(), new ListItem(dictionaryItem.getAmount(), dictionaryItem.getUnit(), dictionaryItem.getName()));
-    }
+////    @Override
+//    public void autoBoxClicked() {
+//        //TODO Some manipulation of autobox? Drop down?
+//    }
+//
+////    @Override
+//    public void autoBoxTextEntered(ListItem listItem) {
+//        //TODO different behavior in Shop fragment
+//        dataBaseController.addItemToActiveList("Ingen kategori",listItem);
+//    }
+//
+//    @Override
+//    public void autoBoxItemSelected(DictionaryItem dictionaryItem) {
+//        dataBaseController.addItemToActiveList(dictionaryItem.getCategory(), new ListItem(dictionaryItem.getAmount(), dictionaryItem.getUnit(), dictionaryItem.getName()));
+//    }
 
 
 
@@ -118,7 +154,7 @@ public class MainViewModel implements IMainViewModel {
     //CallBacks from database
     @Override
     public void userdataChanged(User user) {
-        //Update active shopping list
+        //Update active shopping list //TODO clean up ugly forloops
         System.out.println("MainViewModel - Got callback from Database - userData: " + ((user==null)?"null":user.getUserName()));
         mainActivity.userMail = user.getUserID(); //Tell Main activity the users name and email
         mainActivity.userName = user.getUserName();
@@ -126,19 +162,27 @@ public class MainViewModel implements IMainViewModel {
         if (mainActivity.findViewById(R.id.userName)!=null) ((TextView)mainActivity.findViewById(R.id.userName)).setText(user.getUserName());
         if (navigationDrawerView!= null) navigationDrawerView.getMenu().removeGroup(1);  //Own Lists
         if (navigationDrawerView!= null) navigationDrawerView.getMenu().removeGroup(2); //Foreign Lists
-
-        int i = 0;
-        for (String s : user.getOwnListNames()) {
-            mainActivity.getNavigationView().getMenu().add(1, i, i, s);
-            i++;
-        }
-        //reset id counter ;))
-        i = 0;
-        for (ForeignUserlist s : user.getForeignLists()){
-            if (s!=null && s.getShopListIDs()!=null && s.getShopListIDs().size()>0) {
-                mainActivity.getNavigationView().getMenu().add(2, i, i, s.getUserName() + " - " + s.getListName());
+        System.out.println("Updating navigation drawer");
+        if (mainActivity.getNavigationView() !=null) {
+            mainActivity.getNavigationView().getMenu().clear();
+            mainActivity.getNavigationView().inflateMenu(R.menu.activity_main_drawer);
+            int i = 0, j = 0;
+            for (String s : user.getOwnListNames()) {
+                mainActivity.getNavigationView().getMenu().add(1, i, j, s);
+                j++;
                 i++;
             }
+            //reset Groupid counter ;))
+            i = 0;
+            for (ForeignUserlist s : user.getForeignLists()) {
+                if (s != null && s.getShopListIDs() != null && s.getShopListIDs().size() > 0) {
+                    mainActivity.getNavigationView().getMenu().add(2, i, j, s.getUserName() + " - " + s.getListName());
+                    i++;
+                    j++;
+                }
+            }
+
+
         }
 
         View header = LayoutInflater.from(mainActivity).inflate(R.layout.nav_header_main, null);
@@ -209,6 +253,7 @@ public class MainViewModel implements IMainViewModel {
                 ShopList newShopList = new ShopList();
                 newShopList.setName(activeShopList.getName());
                 newShopList.setId(activeShopList.getId());
+                //FIXME Awful sorting algorithm - O(n2) should be O(n) - needs to conversion to hashMap...
                 for (Category category : activeShopList.getCategories()) {
                     for (ListItem listItem: category.getItems()) {
                         boolean listItemUsed = false;

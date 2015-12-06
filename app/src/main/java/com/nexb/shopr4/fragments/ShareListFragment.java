@@ -13,8 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nexb.shopr4.FireBaseController;
-import com.nexb.shopr4.IMainViewModel;
-import com.nexb.shopr4.MainViewModel;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.R;
 
 /**
@@ -69,12 +68,12 @@ public class ShareListFragment  extends Fragment {
 
 
         mainViewModel.addTitleTextView(((TextView) v.findViewById(R.id.shareInfo)));
-        ((TextView)v.findViewById(R.id.shareInfo)).setText(FireBaseController.getI().getActiveShopListName());
+        ((TextView)v.findViewById(R.id.shareInfo)).setText(mainViewModel.getActiveShopListName());
 
         ((EditText) v.findViewById(R.id.mailString)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                FireBaseController.getI().shareShopListWithUserID(((EditText) v.findViewById(R.id.mailString)).getText().toString(), FireBaseController.getI().getActiveShopListID());
+                mainViewModel.shareShopListWithUserID(((EditText) v.findViewById(R.id.mailString)).getText().toString(), mainViewModel.getActiveShopListID());
 
                 Toast toast = Toast.makeText(getContext(), R.string.toastListShared, Toast.LENGTH_SHORT);
                 toast.show();
