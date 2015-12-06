@@ -6,33 +6,33 @@ import java.util.ArrayList;
  * @author Christian
  */
 public class ForeignUserlist {
-    private String UserName = "noName";
-    private ArrayList<String> ShopListIDs = new ArrayList<>();
+    private String userName = "noName";
+    private ArrayList<String> shopListIDs = new ArrayList<>();
     private String listName = "";
 
     public ForeignUserlist() {
     }
 
     public ForeignUserlist(String userName, ArrayList<String> shopListIDs, String listName) {
-        UserName = userName;
-        ShopListIDs = shopListIDs;
+        this.userName = userName;
+        this.shopListIDs = shopListIDs;
         this.listName = listName;
     }
 
     public ArrayList<String> getShopListIDs() {
-        return ShopListIDs;
+        return shopListIDs;
     }
 
     public void setShopListIDs(ArrayList<String> shopListIDs) {
-        ShopListIDs = shopListIDs;
+        this.shopListIDs = shopListIDs;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public String getListName() {

@@ -1,9 +1,6 @@
 package com.nexb.shopr4.dataModel;
 
-import android.location.Location;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -12,7 +9,7 @@ import java.util.LinkedHashMap;
 public class SuperMarket {
 
     private String name = "";
-    private double lattitude = 0.0;
+    private double latitude = 0.0;
     private double longitude = 0.0;
     private LinkedHashMap<String, ArrayList<String>> categories = new LinkedHashMap<>();
 
@@ -30,8 +27,8 @@ public class SuperMarket {
 
     public String getName() { return name; }    public void setName(String name) { this.name = name; }
 
-    public double getLattitude() { return lattitude; }
-    public void setLattitude(double lattitude) { this.lattitude = lattitude; }
+    public double getLatitude() { return latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public double getLongitude() { return longitude; }
     public void setLongitude(double longitude) { this.longitude = longitude; }

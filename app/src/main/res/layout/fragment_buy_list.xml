@@ -22,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buyfragmentlistview"
-            android:layout_below="@+id/listNameBuy" />
+            android:layout_below="@+id/listNameBuy"
+            />
     </RelativeLayout>
 </FrameLayout>

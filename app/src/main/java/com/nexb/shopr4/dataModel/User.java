@@ -1,14 +1,13 @@
 package com.nexb.shopr4.dataModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author Christian
  */
 public class User {
-    private String UserID = "";
-    private String UserName = "New user";
+    private String userID = "";
+    private String userName = "New user";
 
     private ArrayList<String> ownLists = new ArrayList<>();
 
@@ -31,17 +30,17 @@ public class User {
 
 
     public String getUserID() {
-        return UserID;
+        return userID;
     }
     public void setUserID(String userID) {
-        UserID = userID;
+        this.userID = userID;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public ArrayList<String> getOwnLists() {
