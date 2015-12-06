@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".fragments.EditListFragment">
+    android:layout_height="match_parent" tools:context="org.budtz.christian.shopr4..EditListFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -27,7 +27,7 @@
             android:id="@+id/editfragmentlistview"
             android:layout_gravity="left|center_vertical"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/listNameEdit" />
     </RelativeLayout>
 
