@@ -35,6 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/top_margin" />
+        android:layout_marginTop="@dimen/top_margin"
+        app:backgroundTint="@color/colorBlue"
+
+        />
 
 </android.support.design.widget.CoordinatorLayout>

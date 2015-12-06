@@ -1,7 +1,9 @@
 package com.nexb.shopr4;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -253,9 +256,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setupFloatingActionButton() {
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_lock_idle_lock));
+        fab.setImageDrawable(getResources().getDrawable(R.mipmap.ic_cart));
+
         final Animation firstTurn = AnimationUtils.loadAnimation(this, R.anim.first_turn);
         final Animation secTurn = AnimationUtils.loadAnimation(this, R.anim.sec_turn);
         firstTurn.setAnimationListener(new Animation.AnimationListener() {
@@ -268,13 +273,14 @@ public class MainActivity extends AppCompatActivity
                 if(fragmentType == fragmentState.EDIT) {
                     fragmentManager.beginTransaction().replace(R.id.mainContainer, buyFragment).commit();
                     fragmentType = fragmentState.BUY;
-                    fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_preferences));
+                    fab.setImageDrawable(getResources().getDrawable(R.mipmap.ic_list));
                     hideKeyboard();
                 }else{
                     fragmentManager.beginTransaction().replace(R.id.mainContainer, editFragment).commit();
                     fragmentType = fragmentState.EDIT;
-                    //fab.setImageDrawable(getResources().getDrawable(R.mipmap.ic_kurv));
+                    fab.setImageDrawable(getResources().getDrawable(R.mipmap.ic_cart));
                    // fab.setBackgroundDrawable(getResources().getDrawable(R.mipmap.ic_kurv));
+
                     hideKeyboard();
                 }
             }
