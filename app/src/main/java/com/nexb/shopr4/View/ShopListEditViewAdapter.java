@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.nexb.shopr4.FireBaseController;
-import com.nexb.shopr4.IMainViewModel;
-import com.nexb.shopr4.MainViewModel;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.R;
 import com.nexb.shopr4.dataModel.ListItem;
 

@@ -6,7 +6,8 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.nexb.shopr4.IMainViewModel;
+import com.nexb.shopr4.FireBaseController;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.dataModel.ListItem;
 
 /**
@@ -21,7 +22,6 @@ public class AutoBoxListener implements AutoCompleteTextView.OnClickListener, Ad
 
     @Override
     public void onClick(View v) {
-        mainViewModel.autoBoxClicked();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AutoBoxListener implements AutoCompleteTextView.OnClickListener, Ad
         ListItem newItem = new ListItem(1, " ", textView.getText().toString());
         System.out.println("AutoBox - New ListItemEntered:" + newItem);
         textView.setText("");
-        mainViewModel.autoBoxTextEntered(newItem);
+        FireBaseController.getI().addItemToActiveList("Ingen Kategori", newItem);
         return true;
     }
 }

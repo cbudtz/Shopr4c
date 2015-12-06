@@ -13,8 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nexb.shopr4.FireBaseController;
-import com.nexb.shopr4.IMainViewModel;
-import com.nexb.shopr4.MainViewModel;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.R;
 import com.nexb.shopr4.View.ShopListEditViewAdapter;
 
@@ -87,7 +86,6 @@ public class EditListFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 mainViewModel.setActiveShopListName(((EditText) v.findViewById(R.id.listNameEdit)).getText().toString());
-                //FireBaseController.getI().setActiveShopListName(((EditText) v.findViewById(R.id.listNameEdit)).getText().toString());
                 return false;
             }
         });

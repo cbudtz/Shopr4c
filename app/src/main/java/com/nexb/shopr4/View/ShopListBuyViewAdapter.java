@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.nexb.shopr4.DpToPx;
 import com.nexb.shopr4.FireBaseController;
+import com.nexb.shopr4.Interfaces.IMainViewModel;
 import com.nexb.shopr4.R;
 import com.nexb.shopr4.dataModel.ListItem;
 
@@ -23,19 +24,20 @@ public class ShopListBuyViewAdapter extends ArrayAdapter {
 
     private ArrayList<ShopListViewContent> list;
     LayoutInflater mInflater;
+    IMainViewModel mainViewModel;
 
-    public ShopListBuyViewAdapter(Context context, int resource, ArrayList<ShopListViewContent> list) {
+
+    public ShopListBuyViewAdapter(Context context, int resource, IMainViewModel mainViewModel) {
         super(context, resource);
-        this.list = list;
+        this.mainViewModel = mainViewModel;
+        this.list = mainViewModel.getShopListViewContents();
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
     @Override
     public void notifyDataSetChanged(){
-        this.list = FireBaseController.getI().getShoplistViewContents();
+        this.list = mainViewModel.getShopListViewContents();
         super.notifyDataSetChanged();
-//        Toast toast = Toast.makeText(getContext(), "hejHEJEJEHEJE", Toast.LENGTH_SHORT);
-//                        toast.show();
 
     }
 
@@ -43,7 +45,7 @@ public class ShopListBuyViewAdapter extends ArrayAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ShopListViewContent content = getItem(position);
-        final ListItem newItem = new ListItem();
+        final ListItem tempItem = new ListItem();
         View view = null;
         final boolean[] states = {false};
 
@@ -51,9 +53,10 @@ public class ShopListBuyViewAdapter extends ArrayAdapter {
 
         if(content.getType().equals(ShopListViewContent.contentType.ITEM)){
             view = mInflater.inflate(R.layout.list_item_buy_view, null);
-            newItem.setName(((ShopListViewItem) content).getName());
-            newItem.setUnit(((ShopListViewItem) content).getUnit());
-            newItem.setAmount(((ShopListViewItem) content).getAmount());
+            tempItem.setName(((ShopListViewItem) content).getName());
+            tempItem.setUnit(((ShopListViewItem) content).getUnit());
+            tempItem.setAmount(((ShopListViewItem) content).getAmount());
+            tempItem.setState(((ShopListViewItem) content).getState());
 
             //add listViewItem
             ((TextView)view.findViewById(R.id.itemBuyViewName)).setText(
@@ -72,17 +75,17 @@ public class ShopListBuyViewAdapter extends ArrayAdapter {
             }
 
 
-                final View finalView = view;
+            final View finalView = view;
             view.findViewById(R.id.itemBuyViewGotItem).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if (((ShopListViewItem) content).getState().equals(ListItem.ListItemState.FOUND)) {
-                        newItem.setState(ListItem.ListItemState.DEFAULT);
-                        FireBaseController.getI().updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), newItem);
+                        tempItem.setState(ListItem.ListItemState.DEFAULT);
+                        mainViewModel.updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), tempItem);
                     } else {
-                        newItem.setState(ListItem.ListItemState.FOUND);
-                        FireBaseController.getI().updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), newItem);
+                        tempItem.setState(ListItem.ListItemState.FOUND);
+                        mainViewModel.updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), tempItem);
                     }
                 }
             });
@@ -90,11 +93,11 @@ public class ShopListBuyViewAdapter extends ArrayAdapter {
                 @Override
                 public void onClick(View v) {
                     if (((ShopListViewItem) content).getState().equals(ListItem.ListItemState.NOT_FOUND)) {
-                        newItem.setState(ListItem.ListItemState.DEFAULT);
-                        FireBaseController.getI().updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), newItem);
+                        tempItem.setState(ListItem.ListItemState.DEFAULT);
+                        mainViewModel.updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), tempItem);
                     } else {
-                        newItem.setState(ListItem.ListItemState.NOT_FOUND);
-                        FireBaseController.getI().updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), newItem);
+                        tempItem.setState(ListItem.ListItemState.NOT_FOUND);
+                        mainViewModel.updateItem(((ShopListViewItem) content).getCategoryID(), ((ShopListViewItem) content).getItemId(), tempItem);
                     }
 
                 }

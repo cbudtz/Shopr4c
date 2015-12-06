@@ -19,7 +19,7 @@
         android:maxLength="20"
         android:inputType="textAutoComplete"
         android:textColor="@android:color/background_light"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/side_nav_bar"
         android:textAlignment="center">
     </EditText>
 
