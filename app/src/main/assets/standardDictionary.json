@@ -1,0 +1,92 @@
+{
+  "dictionaryItems": [
+    {
+      "name": "Tomater",
+      "unit": "bk",
+      "category": "Frugt og grønt",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Bananer",
+      "unit": "stk",
+      "category": "Frugt og grønt",
+      "amount": 10,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Rugbrød",
+      "unit": "stk",
+      "category": "Brød",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Skummetmælk",
+      "unit": "L",
+      "category": "Mejeri",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Minimælk",
+      "unit": "L",
+      "category": "Mejeri",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Æg",
+      "unit": "stk",
+      "category": "Æg",
+      "amount": 10,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "AppelsinJuice",
+      "unit": "L",
+      "category": "Juice",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Hakket Oksekød",
+      "unit": "pk",
+      "category": "Kød",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Toiletpapir",
+      "unit": "ruller",
+      "category": "Rengøring",
+      "amount": 8,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Carlsberg",
+      "unit": "stk",
+      "category": "Drikkevarer",
+      "amount": 6,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    },
+    {
+      "name": "Smør",
+      "unit": "pk",
+      "category": "Mejeri",
+      "amount": 1,
+      "lastUsed": 1448533706243,
+      "frequencyOfUse": 1
+    }
+  ]
+}

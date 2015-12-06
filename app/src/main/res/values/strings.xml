@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Shopr4</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="fireBaseUrl">https://shop-r.firebaseio.com/</string>
+    <string name="userDir">Users</string>
+    <string name="shopListDir">Shoplists</string>
+    <string name="supermarketDir">Supermarket</string>
+
+    <!-- Danish strings. -->
+    <string name="toolbarAutoboxHintText">Indtast ny vare</string>
+    <string name="toolbarAddCategory">Tilføj kategori</string>
+    <string name="toolbarDeleteList">Slet liste</string>
+
+    <string name="navItemShare">Del liste</string>
+    <string name="navItemCreateList">Opret ny liste</string>
+
+    <string name="categoryBuyViewName">Kategori navn</string>
+    <string name="categoryEditViewName">Kategori navn</string>
+
+    <string name="itemBuyViewName">Vare navn</string>
+    <string name="itemEditViewName">Vare navn</string>
+    <string name="itemEditViewAmount">Vare antal</string>
+    <string name="itemEditViewType">Vare type</string>
+
+    <string name="shareFragmentInfoText">Liste navn</string>
+    <string name="shareFragmentMailHint">Indtast Email her</string>
+
+    <string name="editFragmentListName">Liste navn</string>
+
+    <string name="buyFragmentListName">Liste navn</string>
+
+    <string name="popupTypeAction1">Styk</string>
+    <string name="popupTypeAction2">Liter</string>
+    <string name="popupTypeAction3">Kilo</string>
+    <string name="popupTypeAction4">Bakker</string>
+    <string name="popupTypeAction5">Pakker</string>
+
+    <string name="toastItemAdded">Vare tilføjet.</string>
+    <string name="toastCatAdded">Kategori tilføjet.</string>
+    <string name="toastNewListAdded">Ny liste oprettet.</string>
+    <string name="toastListShared">Listen er nu delt.</string>
+    <!-- End Danish Strings. -->
+
+</resources>
