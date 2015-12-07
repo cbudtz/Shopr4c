@@ -79,6 +79,10 @@ public class FireBaseController {
         FireBaseController.url = Firebaseurl;
     }
 
+    /**
+     * Singleton instance getter
+     * @return Singleton instance
+     */
     public static synchronized FireBaseController getI() {
         if (activity == null || url == null) {
             System.out.println("Must provide url and activity first!!");
@@ -92,6 +96,11 @@ public class FireBaseController {
 
     }
 
+    /**
+     * private Contstructor - sets Firebase Context.
+     * @param mainActivity - to set up context
+     * @param url - Reference to Firebase
+     */
     private FireBaseController(MainActivity mainActivity, String url) {
         activity = mainActivity;
         FireBaseController.url = url;
@@ -99,6 +108,9 @@ public class FireBaseController {
         Firebase.getDefaultConfig().setPersistenceEnabled(false);
     }
 
+    /**
+     * Parse Firebasereferences and initialise standard categories for Supermarket ;) - For future use...
+     */
     public void init() {
         firebaseRoot = new Firebase(url);
         firebaseUserDir = firebaseRoot.child(activity.getString(R.string.userDir));
@@ -116,6 +128,9 @@ public class FireBaseController {
         resolveUser();
     }
 
+    /**
+     * Look in shared Prefmanager for User ID or snoop in user Account.
+     */
     private void resolveUser() {
         //Find user in android accounts
         //resolve UserID
@@ -123,6 +138,7 @@ public class FireBaseController {
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
         String userString = p.getString("userName", null);
         if (userString == null) {
+            //Find google mail account for user ID
             AccountManager manager = (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
             Account[] list = manager.getAccountsByType("com.google");
             if (list != null && list.length > 0 && list[0] != null) {
@@ -132,15 +148,17 @@ public class FireBaseController {
                 user.setUserID(id);
                 p.edit().putString("userName", id);
             } else {
+                //If no google account found - use Android device ID
                 String id = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID + "");
                 user.setUserID(id);
                 p.edit().putString("userName",id);
             }
         } else {
+            //User already exists in Pref manager
             user.setUserID(userString);
         }
         System.out.println("UserID: " + user.getUserID());
-        // Listen to database for changes in User!
+        // Listen to database for changes in User! - //FIXME Should be moved to FireBaseHandler
         firebaseUserRef = firebaseUserDir.child(user.getUserID());
         System.out.println("FireBaseController - User : " + user.getUserID());
         firebaseUserRef.addValueEventListener(new UserValueEventListener());
@@ -149,10 +167,13 @@ public class FireBaseController {
     }
 
 
-
+    /**
+     * Make some standard user data
+     * @param user
+     */
     private void initializeStandardCategories(User user) {
         ArrayList<String> userCats = user.getUserCategories();
-        //Ugly Hardcoding, should be // FIXME: 26-11-2015
+        //Ugly Hardcoding, should be loaded from Firebase // TODO: 26-11-2015
         userCats.add("Frugt og Grønt");userCats.add("Brød");userCats.add("Konserves");
         userCats.add("Kolonial");userCats.add("Pålæg");userCats.add("Kød");
         userCats.add("Frost");
@@ -160,6 +181,10 @@ public class FireBaseController {
         userCats.add("Slik og Chips");userCats.add("Andet");
     }
 
+    /**
+     * Generate standard user data
+     * @param user
+     */
     private void initializeStandardUnits(User user) {
         ArrayList<String> userUnits = user.getUserUnits();
         //Ugly Hardcoding, should be fixed later on....
@@ -167,6 +192,10 @@ public class FireBaseController {
         userUnits.add("g");userUnits.add("kg");userUnits.add("ruller");
     }
 
+    /**
+     * Generate standard userdata
+     * @param user
+     */
     private void initializeStandardDictionary(User user) {
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -180,11 +209,17 @@ public class FireBaseController {
 
     //End of initialization ----------------------
     //UI interface methods -----------------
+
+    /**
+     * Tells firebase to cahnge active list
+     * @param listID
+     */
     public void setActiveList(String listID){
         //Make certain that user has at least one shopping list...
         if (listID == null) {
             listID = createNewShopList();
         };
+        //TODO should be moved to FireBaseHandler - no callbacks in Controller
         if (activeListRef!=null) activeListRef.removeEventListener(activeListListener);
         //Change location for active list storage
         user.setActiveList(listID);
@@ -196,12 +231,13 @@ public class FireBaseController {
         firebaseUserRef.setValue(user);
 
     }
-
+    //Firebase handler - should be moved
     public String getActiveShopListID(){
         return activeShopList.getId();
     }
 
     //TODO clean ugly code!
+    @Deprecated
     private void parseShopList() {
         ArrayList<ShopListViewContent> newShopListViewContents = new ArrayList<ShopListViewContent>();
         if (activeShopList==null) return;
@@ -226,7 +262,13 @@ public class FireBaseController {
         shoplistViewContents.addAll(newShopListViewContents);
 
     }
+
     // Manipulate Shoplist!! -----------------------
+
+    /**
+     * Tell Firebase to create new shopList
+     * @return
+     */
     public String createNewShopList(){
         //Get ref from Firebase
         Firebase newListRef = firebaseShopListDir.push();
@@ -244,8 +286,12 @@ public class FireBaseController {
 
     }
 
+    /**
+     * Remove activeList ref - update to new reference (default is first on list)
+     */
     public void deleteActiveList(){
         String deleteID = user.getActiveList();
+        //If list is own list
         for (int i=0;i<user.getOwnLists().size();i++) {
             if (user.getOwnLists().get(i).equals(activeShopList.getId())) {
                 user.getOwnLists().remove(i);
@@ -256,6 +302,7 @@ public class FireBaseController {
                 firebaseUserRef.setValue(user);
             }
         }
+        //Else if it is a foreignlist
         for (int i=0;i<user.getForeignLists().size();i++){
             if (user.getForeignLists().get(i).getShopListIDs().get(0).equals(activeShopList.getId())){
                 user.getForeignLists().remove(i);
@@ -267,25 +314,31 @@ public class FireBaseController {
         }
 
     }
-
+    @Deprecated
     public void deleteList(String listID){
         for (String sID :user.getOwnLists()) {
             if (sID.equals(listID)) user.getOwnLists().remove(sID);
         }
     }
-
+    @Deprecated
     public void updateActiveShoplistName(String name){
         for (String s :user.getOwnLists()) {
             if (s == activeShopList.getName()) s = name;
         }
         activeShopList.setName(name);
     }
+
+    /**
+     * Make new Category in active shoplist
+     * @param name
+     */
     public void addCategory(String name){
         if (activeShopList!=null && activeShopList.getCategories()!=null) {
             activeShopList.getCategories().add(new Category(name));
             updateActiveList();
         }
     }
+    @Deprecated
     public void updateCategory(int catId, Category category){
         if (activeShopList!=null && activeShopList.getCategories()!=null && activeShopList.getCategories().get(catId)!=null) {
             activeShopList.getCategories().set(catId, category);
@@ -293,6 +346,11 @@ public class FireBaseController {
         }
     }
 
+    /**
+     * Change name of category on active list
+     * @param catID
+     * @param name
+     */
     public void updateCategoryname (int catID, String name){
         if (activeShopList!= null && activeShopList.getCategories()!=null && activeShopList.getCategories().get(catID)!=null) {
             activeShopList.getCategories().get(catID).setName(name);
@@ -300,6 +358,10 @@ public class FireBaseController {
         }
     }
 
+    /**
+     * Delete Category in Active list
+     * @param catId
+     */
     public void deleteCategory(int catId){
         if (catId>0)
             activeShopList.getCategories().remove(catId);
@@ -314,6 +376,10 @@ public class FireBaseController {
     public ArrayList<Category> getActiveCategories(){
         return activeShopList.getCategories();
     }
+    /**
+     * add a new item to list and create a new Category for it
+     * @param l
+     */
 
     public void addItemToActiveListNoCategory(ListItem l){
         if (activeShopList.getCategories().size()==0) activeShopList.addCategory(new Category("No Category"));
@@ -321,6 +387,11 @@ public class FireBaseController {
         updateActiveList();
     }
 
+    /**
+     * add an item to a known category
+     * @param category
+     * @param l
+     */
     public void addItemToActiveList(String category, ListItem l){
         for (Category c : activeShopList.getCategories()) {
             if (c.getName().equalsIgnoreCase(category)){
@@ -337,6 +408,11 @@ public class FireBaseController {
         updateActiveList();
     }
 
+    /**
+     * Tell Firebase to remove a category - but never remove the last one ;)
+     * @param category
+     * @param itemID
+     */
     public void deleteItem(int category, int itemID){
         activeShopList.getCategories().get(category).getItems().remove(itemID);
         if (activeShopList.getCategories().get(category).getItems().size()<=0 && category!=0){
@@ -346,27 +422,40 @@ public class FireBaseController {
         updateActiveList();
     }
 
+    /**
+     * updates item by IDs
+     * @param category
+     * @param itemID
+     * @param item
+     */
     public void updateItem(int category, int itemID, ListItem item){
         activeShopList.getCategories().get(category).getItems().set(itemID, item);
         updateActiveList();
     }
 
+    /**
+     * Insert item in category
+     * @param category
+     * @param itemID
+     * @param item
+     */
     public void insertItem(int category, int itemID, ListItem item){
         activeShopList.getCategories().get(category).getItems().add(itemID, item);
         updateActiveList();
     }
 
-
+    /**
+     * Convenience method to trigger firebase update
+     */
     private void updateActiveList(){
         activeListRef.setValue(activeShopList);
     }
 
-
-//TODO: probably unnecessary
-    //  public ShopList getActiveShopList() {
-    //    return activeShopList;
-    // }
-
+    /**
+     * Sets a refererence to the active list at a foreign user. If user doesnt exist - he will be created.
+     * @param userID
+     * @param shopListID
+     */
     public void shareShopListWithUserID(String userID, final String shopListID){
         if (userID == user.getUserID()) return;
         System.out.println("UserID = " + userID + "Tried to set foreignList on user:" + userID + ", shopListID: " + shopListID);
@@ -398,7 +487,7 @@ public class FireBaseController {
 
 
     }
-
+    @Deprecated
     public void setShoplistAdaptor(ArrayAdapter<ShopListViewContent> shoplistAdaptor) {
         System.out.println("Setting shopListadator "+shoplistAdaptor);
         this.shoplistAdaptor = shoplistAdaptor;
@@ -409,6 +498,7 @@ public class FireBaseController {
         this.user = user;
     }
     //Adaptor Calls
+    @Deprecated
     public ArrayList<ShopListViewContent> getShoplistViewContents() {
         if (shoplistViewContents == null) {
             ArrayList<ShopListViewContent> dummyList = new ArrayList<ShopListViewContent>();
@@ -418,6 +508,10 @@ public class FireBaseController {
         return shoplistViewContents;
     }
 
+    /**
+     * Legacy code
+     * @return
+     */
     public ArrayList<DictionaryItem> getDictionaryStrings() {
         if (MainActivity.DEBUG){
 //            user.getUserDictionary().add(new DictionaryItem("Bananer", "stk" , 10));
@@ -432,7 +526,7 @@ public class FireBaseController {
         if (dictionaryAdapter!=null) dictionaryAdapter.notifyDataSetChanged();
         return user.getUserDictionary();
     }
-
+    @Deprecated
     public void setDictionaryAdapter(ArrayAdapter<DictionaryItem> dictionaryAdapter) {
         this.dictionaryAdapter = dictionaryAdapter;
     }
@@ -440,6 +534,11 @@ public class FireBaseController {
         if (activeShopList == null) return "";
         return activeShopList.getName();
     }
+
+    /**
+     * Update shopList name
+     * @param name
+     */
     public  void setActiveShopListName(String name){
         //Find active listID
         for (int i = 0; i <user.getOwnLists().size(); i++) {
@@ -451,7 +550,7 @@ public class FireBaseController {
         firebaseUserRef.setValue(user);
         updateActiveList();
     }
-
+    //Legacy code - Should be cleaned up and moved to handler
     private class UserValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -517,7 +616,7 @@ public class FireBaseController {
                 }
             }
 
-
+            //Update navigation menu header
             View header = LayoutInflater.from(activity).inflate(R.layout.nav_header_main, null);
             boolean standardized = false;
             if (user.getUserCategories() == null || user.getUserCategories().size() <= 0) {
@@ -546,7 +645,7 @@ public class FireBaseController {
 
         }
     }
-
+    //Legacy - TODO Clean up!
     private class ShopListValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
